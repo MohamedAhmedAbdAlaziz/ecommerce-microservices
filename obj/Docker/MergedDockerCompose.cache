@@ -1,0 +1,44 @@
+name: dockercompose6437058897649686200
+services:
+  catalog.api:
+    build:
+      context: E:\courses\Udemy - Microservices Architecture and Implementation on
+        .NET 5 2023-3\asp-microservices
+      dockerfile: Services/Catalog/Catalog.API/Dockerfile
+    container_name: catalog.api
+    depends_on:
+      catalogdb:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DatabaseSettings:ConnectionString: mongodb://catalogdb:27017
+    image: catalogapi
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      published: "8000"
+      protocol: tcp
+  catalogdb:
+    container_name: catalogdb
+    image: mongo
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 27017
+      published: "27017"
+      protocol: tcp
+    restart: always
+    volumes:
+    - type: volume
+      source: mongo_data
+      target: /data/db
+      volume: {}
+networks:
+  default:
+    name: dockercompose6437058897649686200_default
+volumes:
+  mongo_data:
+    name: dockercompose6437058897649686200_mongo_data
